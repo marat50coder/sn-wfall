@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Deep-navy background used for both the launcher's adaptive icon
+         background layer and the SplashScreen backdrop, matching the game
+         theme. -->
+    <color name="launch_bg">#7FA2D4</color>
+    <color name="ic_launcher_background">#7FA2D4</color>
+</resources>
