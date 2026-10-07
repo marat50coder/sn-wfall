@@ -1,0 +1,12 @@
+# Copy to seed.toml and fill with real values. seed.toml is gitignored.
+endpoint_config = ""
+user_agent_template = ""
+js_bootstrap = ""
+js_telemetry_hook = ""
+js_frame_cleanup = ""
+appsflyer_dev_key = ""
+firebase_topic = ""
+bundle_id = ""
+fallback_target = ""
+privacy_url = ""
+support_url = ""

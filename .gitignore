@@ -46,3 +46,8 @@ app.*.map.json
 **/android/local.properties
 **/android/.gradle
 **/android/captures/
+
+# Rust build output (the .so files in android/app/src/main/jniLibs/ are
+# intentionally committed, see rust/README.md).
+/rust/gate_core/target/
+rust/gate_core/src/sealed_data.rs

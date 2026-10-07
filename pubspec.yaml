@@ -13,6 +13,9 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   webview_flutter: ^4.10.0
+  # FFI utilities (Pointer<Uint8>, calloc) used by the Rust bridge in
+  # `lib/gate/gate_core.dart`.
+  ffi: ^2.1.3
 
 dev_dependencies:
   flutter_test:

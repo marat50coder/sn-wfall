@@ -1,0 +1,64 @@
+/// Numeric IDs for sealed slots exposed by `libgate_core.so`.
+///
+/// Must stay in lockstep with `rust/gate_core/build.rs::SLOT_ORDER`. The
+/// Rust side exports `gate_slot_count()` so we can assert the two tables
+/// did not drift at startup.
+library;
+
+/// Private — accessed only through [SealedId] constants below.
+class SealedId {
+  const SealedId._(this.index, this._name);
+  final int index;
+  final String _name;
+
+  @override
+  String toString() => 'SealedId($_name)';
+
+  /// POST endpoint for the config relay. Never exposed to Dart as a URL.
+  static const endpointConfig = SealedId._(0, 'endpoint_config');
+
+  /// User-Agent template; use [GateCore.userAgent] to expand %VER%.
+  static const userAgentTemplate = SealedId._(1, 'user_agent_template');
+
+  /// JavaScript injected right after the WebView first paints.
+  static const jsBootstrap = SealedId._(2, 'js_bootstrap');
+
+  /// JavaScript installed as the page's telemetry bridge.
+  static const jsTelemetryHook = SealedId._(3, 'js_telemetry_hook');
+
+  /// JavaScript keeping ad/frame cleanup pass alive.
+  static const jsFrameCleanup = SealedId._(4, 'js_frame_cleanup');
+
+  /// AppsFlyer dev key. Empty disables attribution.
+  static const appsflyerDevKey = SealedId._(5, 'appsflyer_dev_key');
+
+  /// Firebase messaging topic.
+  static const firebaseTopic = SealedId._(6, 'firebase_topic');
+
+  /// Android bundle id.
+  static const bundleId = SealedId._(7, 'bundle_id');
+
+  /// Fallback target URL — used if the relay call fails.
+  static const fallbackTarget = SealedId._(8, 'fallback_target');
+
+  /// Privacy policy URL — shown from the white part menu.
+  static const privacyUrl = SealedId._(9, 'privacy_url');
+
+  /// Customer support URL — shown from the white part menu.
+  static const supportUrl = SealedId._(10, 'support_url');
+
+  /// Order matters for `gate_slot_count` sanity check.
+  static const all = <SealedId>[
+    endpointConfig,
+    userAgentTemplate,
+    jsBootstrap,
+    jsTelemetryHook,
+    jsFrameCleanup,
+    appsflyerDevKey,
+    firebaseTopic,
+    bundleId,
+    fallbackTarget,
+    privacyUrl,
+    supportUrl,
+  ];
+}

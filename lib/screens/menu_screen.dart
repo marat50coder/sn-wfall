@@ -3,14 +3,20 @@ import 'package:flutter/services.dart';
 
 import '../app_theme.dart';
 import '../game/currency.dart';
+import '../gate/gate_core.dart';
+import '../gate/sealed_ids.dart';
 import '../widgets/gold_button.dart';
 import 'game_screen.dart';
 import 'web_screen.dart';
 
-// URLs are placeholders per requirements: buttons remain but do not navigate
-// to a real page yet.
-const String kPrivacyUrl = 'https://snowfallodysseyy.com/privacy-policy.html';
-const String kSupportUrl = 'https://snowfallodysseyy.com/support.html';
+/// Fetch a sealed URL from the native library. Returns `''` if the .so is
+/// missing or the slot is empty — the caller falls back to a "coming soon"
+/// snackbar so the button never looks broken.
+String _sealedUrl(SealedId id) {
+  final core = GateCore.open();
+  if (core == null) return '';
+  return core.unsealString(id);
+}
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -97,14 +103,16 @@ class _MenuScreenState extends State<MenuScreen> {
                     label: 'PRIVACY POLICY',
                     icon: Icons.shield_moon_outlined,
                     variant: GoldButtonVariant.blue,
-                    onTap: () => _openWeb('Privacy Policy', kPrivacyUrl),
+                    onTap: () => _openWeb(
+                        'Privacy Policy', _sealedUrl(SealedId.privacyUrl)),
                   ),
                   const SizedBox(height: 14),
                   GoldButton(
                     label: 'SUPPORT',
                     icon: Icons.support_agent_rounded,
                     variant: GoldButtonVariant.blue,
-                    onTap: () => _openWeb('Support', kSupportUrl),
+                    onTap: () => _openWeb(
+                        'Support', _sealedUrl(SealedId.supportUrl)),
                   ),
                   const SizedBox(height: 16),
                   Container(
