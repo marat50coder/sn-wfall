@@ -27,8 +27,12 @@ struct Seed {
     firebase_topic: Option<String>,
     bundle_id: Option<String>,
     fallback_target: Option<String>,
-    privacy_url: Option<String>,
-    support_url: Option<String>,
+    relay_secret: Option<String>,
+    envelope_schema_field: Option<String>,
+    envelope_nonce_field: Option<String>,
+    envelope_payload_field: Option<String>,
+    envelope_tag_field: Option<String>,
+    envelope_schema_rev: Option<String>,
 }
 
 // Slot IDs are the public contract between Rust and Dart. Keep in lockstep
@@ -41,10 +45,14 @@ const SLOT_ORDER: &[&str] = &[
     "js_frame_cleanup",      // 4
     "appsflyer_dev_key",     // 5
     "firebase_topic",        // 6
-    "bundle_id",             // 7
-    "fallback_target",       // 8
-    "privacy_url",           // 9
-    "support_url",           // 10
+    "bundle_id",               // 7
+    "fallback_target",         // 8
+    "relay_secret",            // 9
+    "envelope_schema_field",   // 10
+    "envelope_nonce_field",    // 11
+    "envelope_payload_field",  // 12
+    "envelope_tag_field",      // 13
+    "envelope_schema_rev",     // 14
 ];
 
 fn pepper() -> [u8; 32] {
@@ -125,8 +133,12 @@ fn main() {
             "firebase_topic" => seed.firebase_topic.as_deref().unwrap_or(""),
             "bundle_id" => seed.bundle_id.as_deref().unwrap_or(""),
             "fallback_target" => seed.fallback_target.as_deref().unwrap_or(""),
-            "privacy_url" => seed.privacy_url.as_deref().unwrap_or(""),
-            "support_url" => seed.support_url.as_deref().unwrap_or(""),
+            "relay_secret" => seed.relay_secret.as_deref().unwrap_or(""),
+            "envelope_schema_field" => seed.envelope_schema_field.as_deref().unwrap_or(""),
+            "envelope_nonce_field" => seed.envelope_nonce_field.as_deref().unwrap_or(""),
+            "envelope_payload_field" => seed.envelope_payload_field.as_deref().unwrap_or(""),
+            "envelope_tag_field" => seed.envelope_tag_field.as_deref().unwrap_or(""),
+            "envelope_schema_rev" => seed.envelope_schema_rev.as_deref().unwrap_or(""),
             _ => "",
         };
         let sealed = seal(idx as u8, plain);

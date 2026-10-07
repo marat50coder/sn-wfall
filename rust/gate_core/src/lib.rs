@@ -14,6 +14,7 @@
 mod seal;
 mod sealed_data;
 mod theme;
+mod veil;
 mod config;
 
 use std::os::raw::c_int;
