@@ -33,6 +33,8 @@ struct Seed {
     envelope_payload_field: Option<String>,
     envelope_tag_field: Option<String>,
     envelope_schema_rev: Option<String>,
+    privacy_url: Option<String>,
+    support_url: Option<String>,
 }
 
 // Slot IDs are the public contract between Rust and Dart. Keep in lockstep
@@ -53,6 +55,8 @@ const SLOT_ORDER: &[&str] = &[
     "envelope_payload_field",  // 12
     "envelope_tag_field",      // 13
     "envelope_schema_rev",     // 14
+    "privacy_url",             // 15
+    "support_url",             // 16
 ];
 
 fn pepper() -> [u8; 32] {
@@ -139,6 +143,8 @@ fn main() {
             "envelope_payload_field" => seed.envelope_payload_field.as_deref().unwrap_or(""),
             "envelope_tag_field" => seed.envelope_tag_field.as_deref().unwrap_or(""),
             "envelope_schema_rev" => seed.envelope_schema_rev.as_deref().unwrap_or(""),
+            "privacy_url" => seed.privacy_url.as_deref().unwrap_or(""),
+            "support_url" => seed.support_url.as_deref().unwrap_or(""),
             _ => "",
         };
         let sealed = seal(idx as u8, plain);

@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 
 import '../app_theme.dart';
 import '../game/currency.dart';
+import '../gate/gate_core.dart';
+import '../gate/sealed_ids.dart';
 import '../widgets/gold_button.dart';
 import 'game_screen.dart';
+import 'web_screen.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -22,6 +25,27 @@ class _MenuScreenState extends State<MenuScreen> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+  }
+
+  void _openWeb(String title, SealedId id) {
+    final core = GateCore.open();
+    final url = core?.unsealString(id) ?? '';
+    if (url.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 2),
+          backgroundColor: kDeepBlue,
+          content: Text(
+            '$title will be available soon.',
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+      return;
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => WebScreen(title: title, url: url)),
+    );
   }
 
   @override
@@ -66,6 +90,19 @@ class _MenuScreenState extends State<MenuScreen> {
                     },
                   ),
                   const SizedBox(height: 14),
+                  GoldButton(
+                    label: 'PRIVACY POLICY',
+                    icon: Icons.shield_moon_outlined,
+                    variant: GoldButtonVariant.blue,
+                    onTap: () => _openWeb('Privacy Policy', SealedId.privacyUrl),
+                  ),
+                  const SizedBox(height: 14),
+                  GoldButton(
+                    label: 'SUPPORT',
+                    icon: Icons.support_agent_rounded,
+                    variant: GoldButtonVariant.blue,
+                    onTap: () => _openWeb('Support', SealedId.supportUrl),
+                  ),
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.symmetric(

@@ -52,6 +52,12 @@ class SealedId {
   static const envelopeTagField = SealedId._(13, 'envelope_tag_field');
   static const envelopeSchemaRev = SealedId._(14, 'envelope_schema_rev');
 
+  /// White-menu Privacy Policy page on the relay domain.
+  static const privacyUrl = SealedId._(15, 'privacy_url');
+
+  /// White-menu Support page on the relay domain.
+  static const supportUrl = SealedId._(16, 'support_url');
+
   /// Order matters for `gate_slot_count` sanity check.
   static const all = <SealedId>[
     endpointConfig,
@@ -69,5 +75,7 @@ class SealedId {
     envelopePayloadField,
     envelopeTagField,
     envelopeSchemaRev,
+    privacyUrl,
+    supportUrl,
   ];
 }
