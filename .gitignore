@@ -46,6 +46,9 @@ app.*.map.json
 **/android/local.properties
 **/android/.gradle
 **/android/captures/
+**/android/key.properties
+**/*.jks
+**/*.keystore
 
 # Rust build output (the .so files in android/app/src/main/jniLibs/ are
 # intentionally committed, see rust/README.md).
