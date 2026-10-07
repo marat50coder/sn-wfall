@@ -30,6 +30,7 @@ class _MenuScreenState extends State<MenuScreen> {
   void _openWeb(String title, SealedId id) {
     final core = GateCore.open();
     final url = core?.unsealString(id) ?? '';
+    final userAgent = core?.userAgent('1.0.0') ?? '';
     if (url.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -44,7 +45,9 @@ class _MenuScreenState extends State<MenuScreen> {
       return;
     }
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => WebScreen(title: title, url: url)),
+      MaterialPageRoute(
+        builder: (_) => WebScreen(title: title, url: url, userAgent: userAgent),
+      ),
     );
   }
 
