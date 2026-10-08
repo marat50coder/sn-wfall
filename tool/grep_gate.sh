@@ -23,14 +23,18 @@ fi
 
 # Snowfall-specific URLs/keys that must never ship as plain text in Dart.
 # Legal links (snowfallodyssey.com/privacy-policy, /support) are allowed
-# via lib/prism/config/legal_links.dart.
+# only in lib/snowfield/dossier/legal_links.dart.
 if rg -n --no-heading --glob 'lib/**/*.dart' \
-    --glob '!lib/prism/config/legal_links.dart' \
+    --glob '!lib/snowfield/dossier/legal_links.dart' \
     -e 'snowfallodyssey\.com' \
     -e 'snowfallodysseyy\.com' \
+    -e 'hollymachine\.com' \
+    -e 'luminafortune' \
     -e 'config\.php' \
     -e '/privacy-policy' \
     -e '/support\b' \
+    -e 'gcdsdk\.appsflyer' \
+    -e 'install_data/v4' \
     >/tmp/snf_url.txt; then
   fail "endpoint / brand URL leaked in lib/:"
   sed 's/^/    /' /tmp/snf_url.txt
@@ -44,6 +48,26 @@ if rg -n --no-heading --glob 'lib/**/*.dart' \
     >/tmp/snf_sec.txt; then
   fail "secret literal in lib/:"
   sed 's/^/    /' /tmp/snf_sec.txt
+fi
+
+# JS enhancer bodies must stay in Rust — no plaintext snippet in Dart.
+if rg -n --no-heading --glob 'lib/**/*.dart' \
+    -e 'window.__snf' \
+    -e 'safe-area-inset-top' \
+    -e 'DOMContentLoaded' \
+    -e 'playsInline' \
+    >/tmp/snf_js.txt; then
+  fail "JS enhancer body leaked in lib/:"
+  sed 's/^/    /' /tmp/snf_js.txt
+fi
+
+# Chrome/WebKit version literals must stay in Rust too.
+if rg -n --no-heading --glob 'lib/**/*.dart' \
+    -e '149\.0\.7823\.137' \
+    -e '537\.36' \
+    >/tmp/snf_ver.txt; then
+  fail "Chrome/WebKit version literal in lib/:"
+  sed 's/^/    /' /tmp/snf_ver.txt
 fi
 
 # No raw print()/debugPrint — gray_part_pitfalls.md invariants.
@@ -101,6 +125,33 @@ if rg -n --no-heading --glob 'lib/**/*.dart' \
     >/tmp/snf_leg.txt; then
   fail "template class name in lib/:"
   sed 's/^/    /' /tmp/snf_leg.txt
+fi
+
+# Ensure no leftover references to the old shared names (prism_core,
+# lib/prism/, ruling_endpoint, tracker_bureau, sealed_bytes) survive —
+# those are the identifiers that antifraud clustered us with siblings on.
+if rg -n --no-heading --glob 'lib/**/*.dart' \
+    -e 'prism_core' \
+    -e 'libprism_core' \
+    -e 'lib/prism/' \
+    -e "'prism/" \
+    >/tmp/snf_old.txt; then
+  fail "legacy prism_* reference lingering in lib/:"
+  sed 's/^/    /' /tmp/snf_old.txt
+fi
+
+# Shared asset filenames that cluster us with siblings — must stay renamed.
+if rg -n --no-heading --glob 'lib/**/*.dart' --glob 'pubspec.yaml' \
+    -e 'Vertical_Loading_Screen' \
+    -e 'Horizontal_Loading_Screen' \
+    -e 'Vertical_Notifications_Screen' \
+    -e 'Horizontal_Notifications_Screen' \
+    -e 'Vertical_Nowifi_Screen' \
+    -e 'Horizontal_Nowifi_Screen' \
+    -e 'Game_Name\.webp' \
+    >/tmp/snf_shared_assets.txt; then
+  fail "shared template asset name reappeared:"
+  sed 's/^/    /' /tmp/snf_shared_assets.txt
 fi
 
 if [[ $status -eq 0 ]]; then

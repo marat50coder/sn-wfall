@@ -1,6 +1,6 @@
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../config/sealed_bytes.dart';
+import '../dossier/veiled_slots.dart';
 
 // ============================================================
 //  PageHarness — ordered JS enhancer injection

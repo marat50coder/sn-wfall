@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../prism/core/step_verdict.dart';
-import '../prism/prism_director.dart';
-import '../prism/stage/content_screen.dart';
-import '../prism/stage/offline_screen.dart';
-import '../prism/stage/permission_card.dart';
-import '../prism/wire/aurora_vault.dart';
-import '../prism/wire/signal_relay.dart';
+import '../snowfield/trail/step_verdict.dart';
+import '../snowfield/snowfield_director.dart';
+import '../snowfield/canopy/content_screen.dart';
+import '../snowfield/canopy/offline_screen.dart';
+import '../snowfield/canopy/permission_card.dart';
+import '../snowfield/circuit/aurora_vault.dart';
+import '../snowfield/circuit/push_dispatch.dart';
 import '../screens/menu_screen.dart';
 import '../shell/snowfall_theme.dart';
 
@@ -15,7 +15,7 @@ import '../shell/snowfall_theme.dart';
 //  BootCanvas — the single startup surface
 // ============================================================
 //  One job: show the vertical/horizontal Snowfall loading art
-//  with a progress bar while `PrismDirector.plan` resolves, then
+//  with a progress bar while `SnowfieldDirector.plan` resolves, then
 //  switch to exactly one destination. All routing logic lives in
 //  the director; this file only owns the `switch (step)`.
 // ============================================================
@@ -28,9 +28,9 @@ class BootCanvas extends StatefulWidget {
     required this.relay,
   });
 
-  final PrismDirector director;
+  final SnowfieldDirector director;
   final AuroraVault vault;
-  final SignalRelay relay;
+  final PushDispatch relay;
 
   @override
   State<BootCanvas> createState() => _BootCanvasState();
@@ -40,9 +40,9 @@ class _BootCanvasState extends State<BootCanvas>
     with SingleTickerProviderStateMixin {
   static const Duration _dotsPeriod = Duration(milliseconds: 1200);
   static const String _verticalArt =
-      'assets/Snowfall_Odyssey_additional_assets/Vertical_Loading_Screen.webp';
+      'assets/Snowfall_Odyssey_additional_assets/winter_warmup_portrait.webp';
   static const String _horizontalArt =
-      'assets/Snowfall_Odyssey_additional_assets/Horizontal_Loading_Screen.webp';
+      'assets/Snowfall_Odyssey_additional_assets/winter_warmup_landscape.webp';
 
   double _progress = 0.04;
   bool _landed = false;

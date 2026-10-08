@@ -1,0 +1,26 @@
+[package]
+name = "drift_signal"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Snowfall gray-flow sealed-data vault (FFI)"
+
+[lib]
+# Produce libprism_core.so for Android (cdylib) and keep rlib for
+# local tests. The .so is loaded by Dart via DynamicLibrary.open.
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+overflow-checks = false
+# Keep the symbol table small; the only visible symbols are the two
+# `prism_*` C exports. Everything else is `#[inline(never)]` with
+# `#[no_mangle]` NOT set, so stripping is safe.
+debug = false
+
+[profile.release.package."*"]
+opt-level = 3

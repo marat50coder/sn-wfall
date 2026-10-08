@@ -76,6 +76,16 @@ android {
             }
         }
     }
+
+    // libprism_core.so is loaded uncompressed straight from the APK
+    // via DynamicLibrary.open — matches android:extractNativeLibs="false".
+    // Gradle 8+ already defaults useLegacyPackaging=false; set it
+    // explicitly so the 16KB page-align build hook never flips it.
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
+    }
 }
 
 kotlin {

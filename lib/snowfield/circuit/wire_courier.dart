@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'client_beacon.dart';
 
 // ============================================================
-//  PrismAgent — HTTP client that always carries the forged UA
+//  WireCourier — HTTP client that always carries the forged UA
 // ============================================================
 //  All verdict POSTs, GCD rescue GETs and push-image fetches go
 //  through this one agent so a request can never escape with the
@@ -11,8 +11,8 @@ import 'client_beacon.dart';
 //  signature).
 // ============================================================
 
-class PrismAgent extends http.BaseClient {
-  PrismAgent();
+class WireCourier extends http.BaseClient {
+  WireCourier();
 
   final http.Client _courier = http.Client();
 
@@ -27,4 +27,4 @@ class PrismAgent extends http.BaseClient {
 }
 
 /// Shared singleton — primed after `ClientBeacon.warmup()` in main().
-final PrismAgent prismAgent = PrismAgent();
+final WireCourier wireCourier = WireCourier();

@@ -54,7 +54,12 @@ app.*.map.json
 **/android/app/google-services.json
 **/ios/Runner/GoogleService-Info.plist
 
-# Rust build output (the .so files in android/app/src/main/jniLibs/ are
-# intentionally committed, see rust/README.md).
-/rust/gate_core/target/
-rust/gate_core/src/sealed_data.rs
+# Rust build output. The committed artefacts live at:
+#   rust/drift_signal/src/sealed_data.rs  (ciphertext only, no plaintext)
+#   android/app/src/main/jniLibs/{arm64-v8a,armeabi-v7a,x86_64}/libdrift_signal.so
+#
+# Plaintext seeds (endpoint, dev key, firebase project, JS enhancers)
+# live in rust/drift_signal/seeds/entries.rs and MUST NOT be committed —
+# only the .example twin ships to git.
+/rust/drift_signal/target/
+rust/drift_signal/seeds/entries.rs

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../app_theme.dart';
 import '../game/currency.dart';
-import '../prism/config/legal_links.dart';
+import '../snowfield/dossier/legal_links.dart';
 import '../widgets/gold_button.dart';
 import 'game_screen.dart';
 import 'web_screen.dart';
@@ -55,7 +55,7 @@ class _MenuScreenState extends State<MenuScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/Snowfall_Odyssey_additional_assets/Vertical_Loading_Screen.webp',
+            'assets/Snowfall_Odyssey_additional_assets/winter_warmup_portrait.webp',
             fit: BoxFit.cover,
           ),
           Container(

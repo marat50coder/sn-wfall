@@ -1,4 +1,4 @@
-import 'sealed_bytes.dart';
+import 'veiled_slots.dart';
 
 // ============================================================
 //  ClientDossier — the one spot where identity + timings live
@@ -27,8 +27,9 @@ abstract final class ClientDossier {
   //  Timings — all offset ≥10% from any sibling value
   // --------------------------------------------------
   /// Snooze for the Skip tap on the push-invite card.
-  /// Range: 172800..604800. Snowfall uses 4 days.
-  static const int permissionSnoozeSeconds = 4 * 24 * 60 * 60;
+  /// Range: 172800..604800. Snowfall uses 2 days 22 hours (252000s).
+  static const int permissionSnoozeSeconds =
+      2 * 24 * 60 * 60 + 22 * 60 * 60;
 
   /// Delay before re-polling GCD when the first install payload
   /// reports Organic. Range: 4..12.

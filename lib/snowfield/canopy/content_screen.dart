@@ -8,12 +8,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
-import '../config/client_dossier.dart';
-import '../wire/aurora_vault.dart';
-import '../wire/client_beacon.dart';
-import '../wire/net_sensor.dart';
-import '../wire/page_harness.dart';
-import '../wire/signal_relay.dart';
+import '../dossier/client_dossier.dart';
+import '../circuit/aurora_vault.dart';
+import '../circuit/client_beacon.dart';
+import '../circuit/net_sensor.dart';
+import '../circuit/page_harness.dart';
+import '../circuit/push_dispatch.dart';
 import 'offline_screen.dart';
 
 // ============================================================
@@ -39,7 +39,7 @@ class ContentScreen extends StatefulWidget {
 
   final String url;
   final AuroraVault vault;
-  final SignalRelay relay;
+  final PushDispatch relay;
 
   @override
   State<ContentScreen> createState() => _ContentScreenState();
@@ -93,9 +93,11 @@ class _ContentScreenState extends State<ContentScreen>
   }
 
   void _enterImmersive() {
+    // Hide both status bar and bottom navigation bar.
+    // immersiveSticky lets the user swipe to momentarily reveal them.
     SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: const <SystemUiOverlay>[SystemUiOverlay.bottom],
+      SystemUiMode.immersiveSticky,
+      overlays: const <SystemUiOverlay>[],
     );
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -119,10 +121,15 @@ class _ContentScreenState extends State<ContentScreen>
       ..setBackgroundColor(Colors.black)
       ..enableZoom(false)
       ..setNavigationDelegate(NavigationDelegate(
-        onPageStarted: (_) {
+        onPageStarted: (String url) {
+          // Capture every main-frame URL (including JS-driven redirects
+          // that bypass onNavigationRequest). Guarantees the Offline
+          // screen can resume exactly where connectivity dropped.
+          _lastMainFrame = url;
           if (mounted) setState(() => _spinner = true);
         },
-        onPageFinished: (_) {
+        onPageFinished: (String url) {
+          _lastMainFrame = url;
           if (mounted) setState(() => _spinner = false);
           _retryCount = 0;
           PageHarness.installAll(_web);

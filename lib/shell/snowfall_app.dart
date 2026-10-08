@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../prelude/boot_canvas.dart';
-import '../prism/config/client_dossier.dart';
-import '../prism/prism_director.dart';
-import '../prism/wire/aurora_vault.dart';
-import '../prism/wire/signal_relay.dart';
+import '../snowfield/dossier/client_dossier.dart';
+import '../snowfield/snowfield_director.dart';
+import '../snowfield/circuit/aurora_vault.dart';
+import '../snowfield/circuit/push_dispatch.dart';
 import 'snowfall_theme.dart';
 
 /// Root widget. Owns the long-lived infrastructure (vault,
@@ -17,9 +17,9 @@ class SnowfallApp extends StatelessWidget {
     required this.relay,
   });
 
-  final PrismDirector director;
+  final SnowfieldDirector director;
   final AuroraVault vault;
-  final SignalRelay relay;
+  final PushDispatch relay;
 
   @override
   Widget build(BuildContext context) {

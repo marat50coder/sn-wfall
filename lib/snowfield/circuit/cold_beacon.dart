@@ -3,7 +3,7 @@
 // ============================================================
 //  A cold-boot push tap on Android delivers the URL through the
 //  launch intent, which Firebase Messaging surfaces via
-//  getInitialMessage(). SignalRelay writes it into the vault's
+//  getInitialMessage(). PushDispatch writes it into the vault's
 //  cold-url slot; this helper is the single read site so the
 //  director has a symmetric API for cold and warm launches.
 // ============================================================

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../shell/snowfall_buttons.dart';
-import '../config/client_dossier.dart';
-import '../wire/aurora_vault.dart';
-import '../wire/signal_relay.dart';
+import '../dossier/client_dossier.dart';
+import '../circuit/aurora_vault.dart';
+import '../circuit/push_dispatch.dart';
 import 'content_screen.dart';
 
 // ============================================================
 //  PermissionCard — push opt-in promo
 // ============================================================
-//  Uses the game's existing Vertical_Notifications_Screen.webp
+//  Uses the game's existing aurora_invite_portrait.webp
 //  as the hero art — the design matches the Snowfall palette
 //  and already carries bonus iconography. Accept / Skip are
 //  gradient pills (same family as the game buttons, see
@@ -26,7 +26,7 @@ class PermissionCard extends StatefulWidget {
   });
 
   final AuroraVault vault;
-  final SignalRelay relay;
+  final PushDispatch relay;
   final String target;
 
   @override
@@ -75,8 +75,8 @@ class _PermissionCardState extends State<PermissionCard> {
     final bool landscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     final String bg = landscape
-        ? 'assets/Snowfall_Odyssey_additional_assets/Horizontal_Notifications_Screen.webp'
-        : 'assets/Snowfall_Odyssey_additional_assets/Vertical_Notifications_Screen.webp';
+        ? 'assets/Snowfall_Odyssey_additional_assets/aurora_invite_landscape.webp'
+        : 'assets/Snowfall_Odyssey_additional_assets/aurora_invite_portrait.webp';
 
     return Scaffold(
       backgroundColor: const Color(0xFF061132),
@@ -102,24 +102,47 @@ class _PermissionCardState extends State<PermissionCard> {
             left: size.width * 0.08,
             right: size.width * 0.08,
             bottom: size.height * (landscape ? 0.07 : 0.08),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SnowfallPillButton(
-                  label: 'Accept',
-                  width: landscape ? size.width * 0.34 : size.width * 0.72,
-                  compact: landscape,
-                  onTap: _accept,
-                ),
-                SizedBox(height: landscape ? 10 : 14),
-                SnowfallGhostButton(
-                  label: 'Skip',
-                  width: landscape ? size.width * 0.34 : size.width * 0.72,
-                  compact: landscape,
-                  onTap: _skip,
-                ),
-              ],
-            ),
+            // In landscape (aurora_invite_landscape) place both
+            // buttons on Skip's row, shrunk by 15% per side (→ 70% of
+            // their original width). Portrait keeps the stacked layout.
+            child: landscape
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SnowfallPillButton(
+                        label: 'Accept',
+                        width: size.width * 0.34 * 0.70,
+                        compact: true,
+                        onTap: _accept,
+                      ),
+                      SizedBox(width: size.width * 0.04),
+                      SnowfallGhostButton(
+                        label: 'Skip',
+                        width: size.width * 0.34 * 0.70,
+                        compact: true,
+                        onTap: _skip,
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      SnowfallPillButton(
+                        label: 'Accept',
+                        width: size.width * 0.72,
+                        compact: false,
+                        onTap: _accept,
+                      ),
+                      const SizedBox(height: 14),
+                      SnowfallGhostButton(
+                        label: 'Skip',
+                        width: size.width * 0.72,
+                        compact: false,
+                        onTap: _skip,
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),

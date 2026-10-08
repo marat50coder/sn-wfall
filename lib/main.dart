@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'prism/prism_director.dart';
-import 'prism/wire/aurora_vault.dart';
-import 'prism/wire/client_beacon.dart';
-import 'prism/wire/net_sensor.dart';
-import 'prism/wire/ruling_endpoint.dart';
-import 'prism/wire/signal_relay.dart';
-import 'prism/wire/tracker_bureau.dart';
+import '../snowfield/snowfield_director.dart';
+import '../snowfield/circuit/aurora_vault.dart';
+import '../snowfield/circuit/client_beacon.dart';
+import '../snowfield/circuit/net_sensor.dart';
+import '../snowfield/circuit/verdict_hub.dart';
+import '../snowfield/circuit/push_dispatch.dart';
+import '../snowfield/circuit/install_registry.dart';
 import 'shell/snowfall_app.dart';
 
 // ============================================================
@@ -53,11 +53,11 @@ Future<void> main() async {
   await vault.warmup();
 
   final NetSensor sensor = NetSensor();
-  final TrackerBureau bureau = TrackerBureau();
-  final RulingEndpoint endpoint = RulingEndpoint(vault);
-  final SignalRelay relay = SignalRelay(vault);
+  final InstallRegistry bureau = InstallRegistry();
+  final VerdictHub endpoint = VerdictHub(vault);
+  final PushDispatch relay = PushDispatch(vault);
 
-  final PrismDirector director = PrismDirector(
+  final SnowfieldDirector director = SnowfieldDirector(
     vault: vault,
     sensor: sensor,
     bureau: bureau,

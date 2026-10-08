@@ -1,17 +1,17 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'config/client_dossier.dart';
-import 'core/step_verdict.dart';
-import 'wire/aurora_vault.dart';
-import 'wire/cold_beacon.dart';
-import 'wire/net_sensor.dart';
-import 'wire/ruling_endpoint.dart';
-import 'wire/signal_relay.dart';
-import 'wire/tracker_bureau.dart';
+import 'dossier/client_dossier.dart';
+import 'trail/step_verdict.dart';
+import 'circuit/aurora_vault.dart';
+import 'circuit/cold_beacon.dart';
+import 'circuit/net_sensor.dart';
+import 'circuit/verdict_hub.dart';
+import 'circuit/push_dispatch.dart';
+import 'circuit/install_registry.dart';
 
 // ============================================================
-//  PrismDirector — the single entry point for boot routing
+//  SnowfieldDirector — the single entry point for boot routing
 // ============================================================
 //  `plan(onTick)` returns a sealed `StepVerdict`. The boot
 //  canvas pattern-matches it and pushes exactly one route; no
@@ -44,8 +44,8 @@ import 'wire/tracker_bureau.dart';
 //  clears on completion so a Retry re-runs the pipeline fresh.
 // ============================================================
 
-class PrismDirector {
-  PrismDirector({
+class SnowfieldDirector {
+  SnowfieldDirector({
     required this.vault,
     required this.sensor,
     required this.bureau,
@@ -55,9 +55,9 @@ class PrismDirector {
 
   final AuroraVault vault;
   final NetSensor sensor;
-  final TrackerBureau bureau;
-  final RulingEndpoint endpoint;
-  final SignalRelay relay;
+  final InstallRegistry bureau;
+  final VerdictHub endpoint;
+  final PushDispatch relay;
 
   Future<StepVerdict>? _inFlight;
 
@@ -73,6 +73,14 @@ class PrismDirector {
     }
 
     relay.onTokenRolled = _onTokenRolled;
+
+    // Ignite the push relay first so `getInitialMessage()` has a chance
+    // to run and park the cold-tap URL into the vault *before* we try to
+    // consume it. Without this, a killed-state notification tap would
+    // fall through to the normal boot path and land on the default URL.
+    try {
+      await relay.ignite();
+    } catch (_) {}
 
     final String? coldTapUrl = await ColdBeacon.consume(vault);
     if (coldTapUrl != null && coldTapUrl.isNotEmpty) {

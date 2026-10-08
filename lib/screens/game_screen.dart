@@ -73,11 +73,17 @@ class _GameScreenState extends State<GameScreen>
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    // Hide the status bar + bottom navigation while the slot game is up.
+    // immersiveSticky lets the user swipe to momentarily reveal them.
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     _grid = _engine.rollGrid();
   }
 
   @override
   void dispose() {
+    // Restore the system bars when leaving the slot screen so the menu
+    // and permission card look normal again.
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 

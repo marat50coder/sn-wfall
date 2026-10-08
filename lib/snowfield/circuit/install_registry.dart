@@ -5,12 +5,12 @@ import 'dart:io';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:flutter/foundation.dart';
 
-import '../config/client_dossier.dart';
-import '../config/sealed_bytes.dart';
-import 'prism_agent.dart';
+import '../dossier/client_dossier.dart';
+import '../dossier/veiled_slots.dart';
+import 'wire_courier.dart';
 
 // ============================================================
-//  TrackerBureau — AppsFlyer install + deep-link collector
+//  InstallRegistry — AppsFlyer install + deep-link collector
 // ============================================================
 //  Fuses three signals into the verdict body:
 //    1. onInstallConversionData — install attribution payload
@@ -28,8 +28,8 @@ import 'prism_agent.dart';
 //  smoke-test the game path.
 // ============================================================
 
-class TrackerBureau {
-  TrackerBureau();
+class InstallRegistry {
+  InstallRegistry();
 
   AppsflyerSdk? _sdk;
 
@@ -172,7 +172,7 @@ class TrackerBureau {
       final String url = unmaskGcdCallUrl(appRef, deviceUid);
       if (url.isEmpty) return null;
 
-      final dynamic response = await prismAgent.get(
+      final dynamic response = await wireCourier.get(
         Uri.parse(url),
         headers: <String, String>{
           'authorization': 'Bearer ${ClientDossier.attributionKey}',

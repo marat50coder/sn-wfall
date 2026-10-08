@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import '../config/client_dossier.dart';
+import '../dossier/client_dossier.dart';
 
 // ============================================================
 //  NetSensor — connectivity + DNS reachability probe

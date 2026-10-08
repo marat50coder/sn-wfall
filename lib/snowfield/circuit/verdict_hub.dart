@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import '../config/client_dossier.dart';
-import '../core/step_verdict.dart';
+import '../dossier/client_dossier.dart';
+import '../trail/step_verdict.dart';
 import 'aurora_vault.dart';
-import 'prism_agent.dart';
+import 'wire_courier.dart';
 
 // ============================================================
-//  RulingEndpoint — POST the body, cache the answer
+//  VerdictHub — POST the body, cache the answer
 // ============================================================
 //  The backend is the single source of truth for routing. On an
 //  approved reply we cache both the URL and its expiry so a
@@ -16,8 +16,8 @@ import 'prism_agent.dart';
 //  landing depending on prior state.
 // ============================================================
 
-class RulingEndpoint {
-  RulingEndpoint(this._vault);
+class VerdictHub {
+  VerdictHub(this._vault);
 
   final AuroraVault _vault;
 
@@ -28,7 +28,7 @@ class RulingEndpoint {
     }
 
     try {
-      final dynamic response = await prismAgent
+      final dynamic response = await wireCourier
           .post(
             Uri.parse(endpoint),
             headers: const <String, String>{

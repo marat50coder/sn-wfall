@@ -58,15 +58,15 @@ class _OfflineScreenState extends State<OfflineScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Snowed In',
+                  'NO INTERNET CONNECTION',
                   textAlign: TextAlign.center,
-                  style: SnowfallTheme.titleStyle(size: 30),
+                  style: SnowfallTheme.titleStyle(size: 26),
                 ),
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    'The storm cut the connection. Clear the drifts and try again.',
+                    'Check your connection and try again',
                     textAlign: TextAlign.center,
                     style: SnowfallTheme.bodyStyle(size: 15),
                   ),

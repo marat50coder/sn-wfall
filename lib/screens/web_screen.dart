@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../app_theme.dart';
-import '../prism/wire/client_beacon.dart';
+import '../snowfield/circuit/client_beacon.dart';
 
 /// Lightweight in-app browser for the Privacy and Support
 /// buttons on the game menu. Loads the URL inside a WebView with

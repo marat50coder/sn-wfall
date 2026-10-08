@@ -10,7 +10,7 @@ name: snowfall_odyssey
 description: "Snowfall Odyssey — a cascading slot adventure for points."
 publish_to: 'none'
 
-version: 1.0.0+4
+version: 1.0.1+8
 
 environment:
   sdk: ^3.12.2
@@ -45,6 +45,9 @@ dependencies:
 
   # ----- Device + env -----
   device_info_plus: ^11.4.0
+
+  # ----- Native FFI (loads libprism_core.so) -----
+  ffi: ^2.1.4
 
 dev_dependencies:
   flutter_test:

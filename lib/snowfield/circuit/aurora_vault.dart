@@ -1,8 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../config/client_dossier.dart';
-import '../core/step_verdict.dart';
+import '../dossier/client_dossier.dart';
+import '../trail/step_verdict.dart';
 
 // ============================================================
 //  AuroraVault — persisted state (prefs + encrypted storage)

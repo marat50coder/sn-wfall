@@ -7,10 +7,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'aurora_vault.dart';
-import 'prism_agent.dart';
+import 'wire_courier.dart';
 
 // ============================================================
-//  SignalRelay — Firebase Messaging + local notifications
+//  PushDispatch — Firebase Messaging + local notifications
 // ============================================================
 //  Cold-start push taps (app killed) are stashed in the vault
 //  so the boot pipeline picks them up on the next frame. Warm
@@ -30,8 +30,8 @@ Future<void> _bgSink(RemoteMessage message) async {
   // OS renders the notification; the tap is handled on resume.
 }
 
-class SignalRelay {
-  SignalRelay(this._vault);
+class PushDispatch {
+  PushDispatch(this._vault);
 
   final AuroraVault _vault;
   final FlutterLocalNotificationsPlugin _local =
@@ -66,7 +66,7 @@ class SignalRelay {
       FirebaseMessaging.onMessageOpenedApp.listen(_onWarmTap);
 
       final RemoteMessage? initial = await _messaging!.getInitialMessage();
-      if (initial != null) _onColdTap(initial);
+      if (initial != null) await _onColdTap(initial);
 
       _wired = true;
     } catch (_) {
@@ -170,10 +170,10 @@ class SignalRelay {
     );
   }
 
-  void _onColdTap(RemoteMessage message) {
+  Future<void> _onColdTap(RemoteMessage message) async {
     final String? url = message.data['url'] as String?;
     if (url != null && url.isNotEmpty) {
-      _vault.parkColdUrl(url);
+      await _vault.parkColdUrl(url);
     }
   }
 
@@ -186,7 +186,7 @@ class SignalRelay {
 
   Future<Uint8List?> _pullImage(String url) async {
     try {
-      final dynamic res = await prismAgent
+      final dynamic res = await wireCourier
           .get(Uri.parse(url))
           .timeout(const Duration(seconds: 10));
       if (res.statusCode == 200) return res.bodyBytes as Uint8List;
