@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Hand-written adaptive icon. flutter_launcher_icons is configured to only
-     regenerate the legacy pre-API-26 mipmaps so this file will not be
-     overwritten on subsequent icon regenerations. Foreground uses a 17% inset
-     so the artwork survives launcher masks (circle, squircle, rounded
-     square) without clipping. -->
+<!-- Hand-written adaptive icon. flutter_launcher_icons is pinned to
+     Android-only, legacy-mipmap mode and does NOT regenerate this
+     file, so edits here survive icon regeneration. The 14% inset
+     keeps the full icon2 artwork visible under every launcher mask
+     (circle, squircle, teardrop) — see gray_part_pitfalls.md §16. -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/launch_bg" />
     <foreground>
         <inset
             android:drawable="@drawable/ic_launcher_art"
-            android:inset="17%" />
+            android:inset="14%" />
     </foreground>
 </adaptive-icon>

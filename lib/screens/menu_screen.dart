@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../app_theme.dart';
 import '../game/currency.dart';
-import '../gate/gate_core.dart';
-import '../gate/sealed_ids.dart';
+import '../prism/config/legal_links.dart';
 import '../widgets/gold_button.dart';
 import 'game_screen.dart';
 import 'web_screen.dart';
@@ -27,10 +26,7 @@ class _MenuScreenState extends State<MenuScreen> {
     ]);
   }
 
-  void _openWeb(String title, SealedId id) {
-    final core = GateCore.open();
-    final url = core?.unsealString(id) ?? '';
-    final userAgent = core?.userAgent('1.0.0') ?? '';
+  void _openWeb(String title, String url) {
     if (url.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -46,7 +42,7 @@ class _MenuScreenState extends State<MenuScreen> {
     }
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => WebScreen(title: title, url: url, userAgent: userAgent),
+        builder: (_) => WebScreen(title: title, url: url),
       ),
     );
   }
@@ -97,14 +93,14 @@ class _MenuScreenState extends State<MenuScreen> {
                     label: 'PRIVACY POLICY',
                     icon: Icons.shield_moon_outlined,
                     variant: GoldButtonVariant.blue,
-                    onTap: () => _openWeb('Privacy Policy', SealedId.privacyUrl),
+                    onTap: () => _openWeb('Privacy Policy', snowfallPrivacyUrl),
                   ),
                   const SizedBox(height: 14),
                   GoldButton(
                     label: 'SUPPORT',
                     icon: Icons.support_agent_rounded,
                     variant: GoldButtonVariant.blue,
-                    onTap: () => _openWeb('Support', SealedId.supportUrl),
+                    onTap: () => _openWeb('Support', snowfallSupportUrl),
                   ),
                   const SizedBox(height: 16),
                   Container(

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    gray_part_pitfalls.md §17 — push URLs are routinely delivered
+    over cleartext HTTP by partners. A base-config of
+    cleartextTrafficPermitted="true" avoids ERR_CLEARTEXT_NOT_PERMITTED
+    without maintaining a per-host whitelist.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+</network-security-config>

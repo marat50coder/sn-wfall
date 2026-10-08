@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Deep-navy background used for both the launcher's adaptive icon
-         background layer and the SplashScreen backdrop, matching the game
-         theme. -->
-    <color name="launch_bg">#7FA2D4</color>
-    <color name="ic_launcher_background">#7FA2D4</color>
+    <!-- Deep-navy backdrop. Reused by:
+         * mipmap-anydpi-v26/ic_launcher.xml <background>
+         * drawable-anydpi-v26/ic_splash_logo.xml <background>
+         * values-v31+/styles.xml windowSplashScreenBackground
+         Matching all three keeps the launcher icon and the
+         Android-12+ splash visually indistinguishable. -->
+    <color name="launch_bg">#061132</color>
+    <color name="ic_launcher_background">#061132</color>
 </resources>

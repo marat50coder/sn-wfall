@@ -50,6 +50,10 @@ app.*.map.json
 **/*.jks
 **/*.keystore
 
+# Firebase project configuration — never commit, pulled per environment.
+**/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
+
 # Rust build output (the .so files in android/app/src/main/jniLibs/ are
 # intentionally committed, see rust/README.md).
 /rust/gate_core/target/

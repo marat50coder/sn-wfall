@@ -2,34 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../app_theme.dart';
+import '../prism/wire/client_beacon.dart';
 
+/// Lightweight in-app browser for the Privacy and Support
+/// buttons on the game menu. Loads the URL inside a WebView with
+/// the same forged UA the gray surface uses, so the two surfaces
+/// never answer with different User-Agent strings.
 class WebScreen extends StatefulWidget {
   const WebScreen({
     super.key,
     required this.title,
     required this.url,
-    this.userAgent = '',
   });
 
   final String title;
   final String url;
-  final String userAgent;
 
   @override
   State<WebScreen> createState() => _WebScreenState();
 }
 
 class _WebScreenState extends State<WebScreen> {
-  late final WebViewController _controller;
+  late final WebViewController _web;
   bool _loading = true;
   String? _error;
 
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
+    _web = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(kNightBlue)
+      ..setUserAgent(ClientBeacon.userAgent)
       ..setNavigationDelegate(NavigationDelegate(
         onPageStarted: (_) {
           if (mounted) {
@@ -42,23 +46,21 @@ class _WebScreenState extends State<WebScreen> {
         onPageFinished: (_) {
           if (mounted) setState(() => _loading = false);
         },
-        onWebResourceError: (err) {
+        onWebResourceError: (WebResourceError err) {
           if (err.isForMainFrame != true) return;
           if (mounted) {
             setState(() {
               _loading = false;
-              _error = 'This page could not be opened. Check your connection and try again.';
+              _error =
+                  'This page could not be opened. Check your connection and try again.';
             });
           }
         },
       ));
-    if (widget.userAgent.trim().isNotEmpty) {
-      _controller.setUserAgent(widget.userAgent);
-    }
     if (widget.url.trim().isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        _controller.loadRequest(Uri.parse(widget.url.trim()));
+        _web.loadRequest(Uri.parse(widget.url.trim()));
       });
     }
   }
@@ -85,25 +87,26 @@ class _WebScreenState extends State<WebScreen> {
                 ),
               )
             : Stack(
-                children: [
-                  WebViewWidget(controller: _controller),
+                children: <Widget>[
+                  WebViewWidget(controller: _web),
                   if (_error != null)
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(24),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: [
+                          children: <Widget>[
                             Text(
                               _error!,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white70, fontSize: 16),
+                              style: const TextStyle(
+                                  color: Colors.white70, fontSize: 16),
                             ),
                             const SizedBox(height: 16),
                             TextButton(
                               onPressed: () {
                                 setState(() => _error = null);
-                                _controller.loadRequest(Uri.parse(widget.url.trim()));
+                                _web.loadRequest(Uri.parse(widget.url.trim()));
                               },
                               child: const Text('TRY AGAIN'),
                             ),
